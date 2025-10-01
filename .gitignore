@@ -8,4 +8,12 @@ node_modules
 go-singbox
 
 config.yml
+config.yaml
 proxy-*.yaml
+config.json
+config-*.json
+config.zip
+config.tar
+config.gz
+config.tar.gz
+config.tgz

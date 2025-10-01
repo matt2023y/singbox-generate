@@ -68,7 +68,7 @@ func main() {
 	if e != nil {
 		logger.Error(e)
 	}
-	f, _ := os.OpenFile("test.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	f, _ := os.OpenFile("config.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	defer f.Close()
 	f.Write(b)
 }
