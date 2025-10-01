@@ -72,12 +72,12 @@ var Conf Config
 var UrlTestConf UrlTest
 
 func init() {
-	file, err := os.ReadFile(path.Join(BaseDir, "config.yml"))
+	file, err := os.ReadFile(path.Join(BaseDir, "config.yaml"))
 	if err != nil {
-		panic(fmt.Errorf("failed to read config.yml: %w", err))
+		panic(fmt.Errorf("failed to read config.yaml: %w", err))
 	}
 	if err := yaml.Unmarshal(file, &Conf); err != nil {
-		panic(fmt.Errorf("failed to parse config.yml: %w", err))
+		panic(fmt.Errorf("failed to parse config.yaml: %w", err))
 	}
 
 	UrlTestConf = *Conf.UrlTest
