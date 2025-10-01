@@ -1,0 +1,151 @@
+clash_url:
+  kk: "https://xxx.dev/"
+  厂商: sub
+self_clash:
+  s1: {name: "个人专用,Self", server: xyz, port: 141, type: trojan, password: C20, sni: s.com, skip-cert-verify: true, udp: true}
+
+
+default_domain_resolver: ali-dns
+outer_dns: cc-dns
+inner_dns: ali-dns
+
+inbounds:
+  tun: false # 需要 NFTables 进行流量转发
+  mixed: true
+
+url_test:
+  url:
+  interval: 10m
+  tolerance: 100
+
+peer_groups:
+  HK: [ "香港", "HongKong", "HK" ]
+  US: [ "美国", "America", "US" ]
+  JP: [ "日本", "Japan", "JP" ]
+  KR: [ "韩国", "KR" ]
+  SG: [ "新加坡", "Singapore", "SG", "狮城" ]
+  TW: [ "台湾", "Taiwan", "TW" ]
+  VN: [ "越南", "Vietnam", "VN" ]
+  个人专用: [ "个人专用" ]
+
+# 默认的 direct block Select GLOBAL Auto + App; 个人的不会出现在Auto分组里
+app_groups:
+  AI: [ "US", "JP",  "Select" ]
+  Telegram: [ "JP", "US", "SG", "TW", "VN" ]
+  Whatsapp: [ "US", "JP", "SG", "TW", "VN"]
+  Google: [ "TW", "US", "JP", "SG", "VN" ]
+  Facebook: [ "US", "JP", "SG", "TW", "VN" ]
+  YouTube: [ "JP", "US", "SG", "TW", "VN" ]
+  Apple: [ "direct", "Select" ]
+  China: [ "direct" ]
+  AD: [ "block", "direct" ]
+  Microsoft: [ "direct", "Select" ]
+  Leak: [  "HK", "US", "JP", "SG", "TW", "VN" ]
+  BN: [ "TW", "US", "JP", "VN" ]
+
+dns_servers:
+  - tag: cc-dns
+    type: tls
+    server: 1.1.1.1
+    port: 853
+  - tag: ali-dns
+    type: https
+    server: 223.5.5.5
+    port: 443
+  - tag: 114-dns
+    type: udp
+    server: 114.114.114.114
+    port: 53
+    final: true
+
+rules:
+  - name: AI.list
+    dns: cc-dns
+    group: AutoAI
+  - name: Apple.list
+    group :  AutoApple
+    dns: ali-dns
+  - name: BanAD.list
+    group :  AD
+  - name: BanEasyList.list
+    group :  AD
+  - name: BanEasyListChina.list
+    group :  AD
+  - name: BanEasyPrivacy.list
+    group :  AD
+  - name: BanProgramAD.list
+    group :  AD
+  - name: Bing.list
+    group :  China
+    dns: ali-dns
+  - name: ChinaCompanyIp.list
+    group :  China
+    dns: ali-dns
+  - name: ChinaDomain.list
+    group :  China
+    dns: ali-dns
+  - name: ChinaIp.list
+    group :  China
+    dns: ali-dns
+  - name: ChinaIpV6.list
+    group :  China
+    dns: ali-dns
+  - name: ChinaMedia.list
+    group :  China
+    dns: ali-dns
+  - name: Download.list
+    group :  China
+    dns: ali-dns
+  - name: GoogleCN.list
+    group :  Google
+    dns: cc-dns
+  - name: LocalAreaNetwork.list
+    group :  direct
+    dns: ali-dns
+  - name: Microsoft.list
+    group :  Microsoft
+    dns: ali-dns
+  - name: Netflix.list
+    group :  YouTube
+    dns: cc-dns
+  - name: OneDrive.list
+    group :  direct
+    dns: cc-dns
+  - name: ProxyMedia.list
+    group :  YouTube
+    dns: cc-dns
+  - name: Telegram.list
+    group :  Telegram
+    dns: cc-dns
+  - name: UnBan.list
+    group :  Select
+    dns: cc-dns
+  - name: Xbox.list
+    group :  Microsoft
+    dns: cc-dns
+  - name: ProxyGFWlist.list
+    group :  Select
+    dns: cc-dns
+  - name: ProxyLite.list
+    group :  Select
+    dns: cc-dns
+
+rule_sets:
+  - path: config/sets/geosite-cn.srs
+    group: direct
+    dns: ali-dns
+    download_detour: AutoSelect
+    update_interval: 1d
+    invert: false
+  - path: https://raw.githubusercontent.com/lyc8503/sing-box-rules/refs/heads/rule-set-geosite/geosite-binance.srs
+    group: BN
+    dns: cc-dns
+    download_detour: AutoSelect
+    update_interval: 1d
+    invert: false
+  - path: config/sets/!geosite-cn.srs
+    group: AutoSelect
+    dns: cc-dns
+    download_detour: AutoSelect
+    update_interval: 1d
+    invert: true

@@ -1,0 +1,11 @@
+test*.json
+
+.idea
+
+node_modules
+
+*.db
+go-singbox
+
+config.yml
+proxy-*.yaml
