@@ -38,6 +38,17 @@ type TunInbound struct {
 
 func (in TunInbound) Inbound() {}
 
+type TProxyInbound struct {
+	InboundBase
+
+	Listen      string `json:"listen"`
+	ListenPort  int    `json:"listen_port"`
+	TcpFastOpen bool   `json:"tcp_fast_open"`
+	UdpFragment bool   `json:"udp_fragment"`
+}
+
+func (in TProxyInbound) Inbound() {}
+
 var True = true
 var InboundsConf []InboundInterface
 
@@ -58,7 +69,7 @@ func init() {
 			StrictRoute: true,
 		})
 	}
-	if config.Conf.Inbounds.Mixed {
+	if config.Conf.Inbounds.Mixed != 0 {
 		InboundsConf = append(InboundsConf, HttpInbound{
 			InboundBase: InboundBase{
 				Type:                     "mixed",
@@ -67,7 +78,22 @@ func init() {
 				SniffOverrideDestination: &True,
 			},
 			Listen:     "::",
-			ListenPort: 6666,
+			ListenPort: config.Conf.Inbounds.Mixed,
+		})
+	}
+
+	if config.Conf.Inbounds.TProxy != 0 {
+		InboundsConf = append(InboundsConf, TProxyInbound{
+			InboundBase: InboundBase{
+				Type:                     "tproxy",
+				Tag:                      "tproxy-in",
+				Sniff:                    &True,
+				SniffOverrideDestination: &True,
+			},
+			Listen:      "::",
+			ListenPort:  config.Conf.Inbounds.TProxy,
+			TcpFastOpen: true,
+			UdpFragment: true,
 		})
 	}
 }

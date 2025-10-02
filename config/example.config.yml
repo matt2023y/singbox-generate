@@ -11,7 +11,8 @@ inner_dns: ali-dns
 
 inbounds:
   tun: false # 需要 NFTables 进行流量转发
-  mixed: true
+  mixed: 6666
+  tproxy: 1234
 
 url_test:
   url:

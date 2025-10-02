@@ -40,8 +40,9 @@ type Config struct {
 	OuterDNS string `yaml:"outer_dns"`
 
 	Inbounds struct {
-		Tun   bool `yaml:"tun"`
-		Mixed bool `yaml:"mixed"`
+		Tun    bool `yaml:"tun"`
+		Mixed  int  `yaml:"mixed"`
+		TProxy int  `yaml:"tproxy"`
 	} `yaml:"inbounds"` // 入站类型
 
 	PeerGroups map[string][]string `yaml:"peer_groups"` // peer 分组
