@@ -17,3 +17,7 @@ config.tar
 config.gz
 config.tar.gz
 config.tgz
+config-*.zip
+config-*.tgz
+Config-*.zip
+Config-*.tgz
