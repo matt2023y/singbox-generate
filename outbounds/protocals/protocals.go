@@ -25,6 +25,9 @@ func (t Trojan) GetTag() string {
 func (t Trojan) GetServer() string {
 	return t.Server
 }
+func (t Trojan) GetSni() string {
+	return *t.TLS.ServerName
+}
 
 type Vless struct {
 	Tag        string `yaml:"tag" json:"tag"`
@@ -42,6 +45,9 @@ func (t Vless) GetTag() string {
 
 func (t Vless) GetServer() string {
 	return t.Server
+}
+func (t Vless) GetSni() string {
+	return ""
 }
 
 type Vmess struct {
@@ -62,6 +68,9 @@ func (t Vmess) GetTag() string {
 func (t Vmess) GetServer() string {
 	return t.Server
 }
+func (t Vmess) GetSni() string {
+	return ""
+}
 
 type Hysteria2 struct {
 	Tag  string `yaml:"tag" json:"tag"`
@@ -80,6 +89,9 @@ func (h Hysteria2) GetTag() string {
 }
 func (h Hysteria2) GetServer() string {
 	return h.Server
+}
+func (h Hysteria2) GetSni() string {
+	return ""
 }
 
 type SS struct {
@@ -103,6 +115,9 @@ func (s SS) GetTag() string {
 func (s SS) GetServer() string {
 	return s.Server
 }
+func (s SS) GetSni() string {
+	return ""
+}
 
 type Base struct {
 	Type      string   `yaml:"type" json:"type"`
@@ -115,6 +130,9 @@ func (b Base) GetTag() string {
 	return b.Tag
 }
 func (b Base) GetServer() string {
+	return ""
+}
+func (b Base) GetSni() string {
 	return ""
 }
 

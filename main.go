@@ -41,6 +41,12 @@ func main() {
 			continue
 		}
 		peerDomains[s] = struct{}{}
+
+		s = p.GetSni()
+		if s == "" {
+			continue
+		}
+		peerDomains[s] = struct{}{}
 	}
 
 	peersDNS := dns.GetPeerDNS()
@@ -50,6 +56,8 @@ func main() {
 	dnsConf := dns.GetDNSConf()
 	dnsConf.Rules = dnsRules
 
+	peerRoutRule := route.GetPeerRouteRule(slices.Sorted(maps.Keys(peerDomains)))
+
 	singConf := singbox.Singbox{
 		Experimental: &singbox.ExperimentalConf,
 		Log:          &logger.LogConf,
@@ -57,7 +65,7 @@ func main() {
 		Inbounds:     &singbox.InboundsConf,
 		Outbounds:    &proxies,
 		Route: &route.Route{
-			Rules:                 outboundRules,
+			Rules:                 append(outboundRules, &peerRoutRule),
 			RuleSet:               outboundRuleSet,
 			DefaultDomainResolver: config.Conf.DefaultDomainResolver,
 			Final:                 "direct", // route

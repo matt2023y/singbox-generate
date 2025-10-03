@@ -182,3 +182,16 @@ func groupRuleSet(r []*config.RuleSet) (RouteRuleSet, []*RouteRule, []*DNSRule) 
 	}
 	return ruleSet, rr, dr
 }
+
+func GetPeerRouteRule(domains []string) RouteRule {
+	action := "route"
+
+	var peerRule RouteRule
+	peerRule.BaseRule = BaseRule{
+		Domain: domains,
+	}
+	peerRule.Action = &action
+	peerRule.Outbound = "direct"
+
+	return peerRule
+}

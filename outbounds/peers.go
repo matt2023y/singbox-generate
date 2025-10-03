@@ -15,6 +15,7 @@ import (
 type Proxy interface {
 	GetTag() string
 	GetServer() string
+	GetSni() string
 }
 
 func ParseProxyFromURL() ([]Proxy, error) {
