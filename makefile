@@ -13,5 +13,8 @@ git:
 	git add .
 
 
+clean:
+	rm Config-*.zip go-singbox cache.db config/proxy-*.yaml > /dev/null 2>&1
+
 # command > /dev/null ; === command 1>/dev/null
 # command > /dev/null 2>&1; === command 1>/dev/null 2>&1
