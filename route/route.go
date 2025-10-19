@@ -13,10 +13,11 @@ type BaseRule struct {
 	DomainRegex   []string `json:"domain_regex,omitempty"`
 	IpCidr        []string `json:"ip_cidr,omitempty"`
 	Protocol      []string `json:"protocol,omitempty"`
-	Action        *string  `json:"action,omitempty"`
 	RuleSet       []string `json:"rule_set,omitempty"`
 	Invert        bool     `json:"invert"`
 	ClashMode     *string  `json:"clash_mode,omitempty"`
+	Port          []uint16 `json:"port,omitempty"`
+	Action        *string  `json:"action,omitempty"`
 }
 
 type RouteRule struct {
@@ -50,6 +51,7 @@ func GenRouteAndDNSRules() (RouteRuleSet, []*RouteRule, []*DNSRule, error) {
 	var clashGlobalRouteRule RouteRule
 	var clashDirectRouteRule RouteRule
 	var clashGlobalDNSRule, clashDirectDNSRule DNSRule
+	var quicRouteRule RouteRule
 
 	// route 独有的rule
 	sniffAction := "sniff"
@@ -57,6 +59,7 @@ func GenRouteAndDNSRules() (RouteRuleSet, []*RouteRule, []*DNSRule, error) {
 	hijackAction := "hijack-dns"
 	hijackRouteRule.Action = &hijackAction
 	hijackRouteRule.Protocol = []string{"dns"}
+	hijackRouteRule.Port = []uint16{53}
 
 	clashGlobalAction := "global"
 	clashGlobalRouteRule.ClashMode = &clashGlobalAction
@@ -71,6 +74,9 @@ func GenRouteAndDNSRules() (RouteRuleSet, []*RouteRule, []*DNSRule, error) {
 
 	clashDirectDNSRule.ClashMode = &clashDirectAction
 	clashDirectDNSRule.Server = config.Conf.InnerDNS
+
+	quicRouteRule.Protocol = []string{"quic"}
+	quicRouteRule.Outbound = "block"
 
 	outboundRules = append(outboundRules, &sniffRouteRule, &hijackRouteRule, &clashGlobalRouteRule, &clashDirectRouteRule)
 	dnsRules = append(dnsRules, &clashGlobalDNSRule, &clashDirectDNSRule)

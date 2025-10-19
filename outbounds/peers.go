@@ -36,14 +36,19 @@ func ParseProxyFromURL() ([]Proxy, error) {
 			}
 
 			_nodes, err := subscribes.ReturnNodesFromYaml(tag, string(body))
-			if err != nil {
-				fmt.Println("解析节点出错", err)
-				return nil, err
+			if err == nil {
+				nodes = append(nodes, _nodes...)
+				continue
 			}
-			nodes = append(nodes, _nodes...)
-			//nodes, err = types.ParseByBase64(string(body)) // Base64 -- trojan 格式
-			//if err != nil {
-			//}
+
+			fmt.Println("解析 clash 格式出错, 换成 trojan 格式解析", err)
+			_nodes, err = subscribes.ParseByBase64(tag, string(body)) // Base64 -- trojan 格式
+			if err == nil {
+				nodes = append(nodes, _nodes...)
+				continue
+			}
+
+			fmt.Print("trojan 格式解析失败")
 
 		} else {
 			//nodes = strings.Split(link, "\n") // 自建
@@ -55,8 +60,13 @@ func ParseProxyFromURL() ([]Proxy, error) {
 		nodes = append(nodes, c)
 	}
 
+	nodeSet := make(map[string]subscribes.NodeInfo)
+	for _, node := range nodes {
+		nodeSet[node.GetName()] = node
+	}
+
 	proxies := make([]Proxy, 0)
-	for _, u := range nodes {
+	for _, u := range nodeSet {
 		var p Proxy
 		switch u.GetScheme() {
 		case "trojan":

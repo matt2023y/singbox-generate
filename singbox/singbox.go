@@ -32,8 +32,8 @@ type TunInbound struct {
 	InterfaceName *string  `json:"interface_name,omitempty"`
 	Address       []string `json:"address"`
 	AutoRoute     bool     `json:"auto_route"`
-	//AutoRedirect  bool     `json:"auto_redirect"`
-	StrictRoute bool `json:"strict_route"`
+	AutoRedirect  bool     `json:"auto_redirect"` // 使用 NFTables
+	StrictRoute   bool     `json:"strict_route"`
 }
 
 func (in TunInbound) Inbound() {}
@@ -48,6 +48,14 @@ type TProxyInbound struct {
 }
 
 func (in TProxyInbound) Inbound() {}
+
+type DirectInbound struct {
+	InboundBase
+	Network      string `json:"network"`
+	OverridePort uint16 `json:"override_port"`
+}
+
+func (in DirectInbound) Inbound() {}
 
 var True = true
 var InboundsConf []InboundInterface
@@ -65,8 +73,9 @@ func init() {
 			Address: []string{
 				"172.18.0.1/30",
 			},
-			AutoRoute:   true,
-			StrictRoute: true,
+			AutoRoute:    true,
+			StrictRoute:  true,
+			AutoRedirect: true,
 		})
 	}
 	if config.Conf.Inbounds.Mixed != 0 {
@@ -96,6 +105,16 @@ func init() {
 			UdpFragment: true,
 		})
 	}
+
+	InboundsConf = append(InboundsConf, DirectInbound{
+		InboundBase: InboundBase{
+			Type: "direct",
+			Tag:  "direct-in",
+		},
+		Network:      "udp",
+		OverridePort: 53,
+	})
+
 }
 
 type ClashApi struct {
