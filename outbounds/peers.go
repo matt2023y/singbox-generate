@@ -69,8 +69,8 @@ func ParseProxyFromURL() ([]Proxy, error) {
 	for _, u := range nodeSet {
 		if strings.Contains(u.GetServer(), "ipv6") ||
 			strings.Contains(u.GetServer(), "ip6") ||
-			strings.Contains(*u.GetSNI(), "ipv6") ||
-			strings.Contains(*u.GetSNI(), "ip6") {
+			u.GetSNI() != nil && strings.Contains(*u.GetSNI(), "ipv6") ||
+			u.GetSNI() != nil && strings.Contains(*u.GetSNI(), "ip6") {
 			continue
 		}
 		var p Proxy
