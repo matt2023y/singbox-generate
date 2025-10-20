@@ -67,6 +67,12 @@ func ParseProxyFromURL() ([]Proxy, error) {
 
 	proxies := make([]Proxy, 0)
 	for _, u := range nodeSet {
+		if strings.Contains(u.GetServer(), "ipv6") ||
+			strings.Contains(u.GetServer(), "ip6") ||
+			strings.Contains(*u.GetSNI(), "ipv6") ||
+			strings.Contains(*u.GetSNI(), "ip6") {
+			continue
+		}
 		var p Proxy
 		switch u.GetScheme() {
 		case "trojan":
@@ -92,12 +98,18 @@ func ParseProxyFromURL() ([]Proxy, error) {
 				Tag:        u.GetName(),
 			}
 		case "hysteria2":
+			tls := protocals.TLS{
+				Enabled:    true,
+				ServerName: u.GetSNI(),
+				Insecure:   u.GetAllowInsecure(), // toBool(u.Query().Get("allowInsecure")),
+			}
 			p = protocals.Hysteria2{
 				Type:       "hysteria2",
 				Server:     u.GetServer(),
 				ServerPort: u.GetPort(),
 				Password:   u.GetPassword(),
 				Tag:        u.GetName(),
+				Tls:        tls,
 			}
 		case "ss":
 			{

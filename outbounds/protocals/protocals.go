@@ -81,7 +81,7 @@ type Hysteria2 struct {
 
 	Password string `yaml:"password" json:"password"`
 	Obfs     string `yaml:"obfs,omitempty" json:"obfs,omitempty"`
-	Tls      bool   `yaml:"tls,omitempty" json:"tls,omitempty"`
+	Tls      TLS    `yaml:"tls,omitempty" json:"tls,omitempty"`
 }
 
 func (h Hysteria2) GetTag() string {

@@ -78,7 +78,7 @@ func GenRouteAndDNSRules() (RouteRuleSet, []*RouteRule, []*DNSRule, error) {
 	quicRouteRule.Protocol = []string{"quic"}
 	quicRouteRule.Outbound = "block"
 
-	outboundRules = append(outboundRules, &sniffRouteRule, &hijackRouteRule, &clashGlobalRouteRule, &clashDirectRouteRule)
+	outboundRules = append(outboundRules, &sniffRouteRule, &hijackRouteRule, &clashGlobalRouteRule, &clashDirectRouteRule, &quicRouteRule)
 	dnsRules = append(dnsRules, &clashGlobalDNSRule, &clashDirectDNSRule)
 
 	for _, rule := range conf.Rules {

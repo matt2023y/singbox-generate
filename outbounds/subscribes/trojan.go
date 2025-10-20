@@ -71,7 +71,7 @@ func (n TrojanNode) GetScheme() string {
 	return n.Url.Scheme
 }
 func (n TrojanNode) GetServer() string {
-	return n.Url.Host
+	return n.Url.Hostname()
 }
 func (n TrojanNode) GetPort() int {
 	return *parsePort(n.Url.Port())
@@ -102,7 +102,8 @@ func (n TrojanNode) GetTLS() *bool {
 	return &b
 }
 func (n TrojanNode) GetSNI() *string {
-	return new(string)
+	s := n.Url.Query().Get("peer")
+	return &s
 }
 func (n TrojanNode) GetNetwork() *string {
 	return nil
